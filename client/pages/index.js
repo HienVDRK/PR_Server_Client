@@ -4,35 +4,43 @@ import styles from '../styles/Home.module.css'
 import { gql } from "@apollo/client"
 import client from "../apollo-client"
 import { useRouter } from 'next/router'
-
+import 'antd/dist/antd.css';
+import { Typography, Divider } from 'antd';
+const { Title, Paragraph, Text } = Typography;
+import _ from 'lodash';
 export default function Home(props) {
-  const router = useRouter()
+ const router = useRouter()
+ let grouped =_.chain(props.allArticle)
+      .groupBy("category.name")
+      .map((value, key) => ({ nameCate: key, listArctile: value }))
+      .value();
+  
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Tin tức</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
+    <>
+        <Head>
+          <title>Tin tức</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
         <h1 className={styles.title}>
             Welcome to page News!
         </h1>
 
-        <div className={styles.grid} >
-            {props.allArticle.map((value, index) => (
-              <Link
-                href={{ pathname: `/detail`, query: { id: value.id } }}
-                key={index}>
-                <div className={styles.card}>
-                  <h3>{value.title}</h3>
-                  <h4>{value.summary}</h4>
-                  <h5>{value.author}</h5>
-                </div>
-              </Link>
+        <div className={styles.grid}>
+            {grouped.map((value, index1) => (
+              <div key={index1}>
+              <h2 style={{paddingLeft: "20px"}}>{value.nameCate}</h2>
+                {value.listArctile.map((value, index2) => (
+                  <Link href={{ pathname: `/detail`, query: { id: value.id } }}>
+                    <div key={index2} className={styles.card}>
+                      <h4>{value.title}</h4>
+                      <h4>{value.summary}</h4>
+                      <h5>{value.author}</h5>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             ))}
         </div>
-      </main>
 
       <footer className={styles.footer}>
         <a
@@ -44,10 +52,9 @@ export default function Home(props) {
           <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
         </a>
       </footer>
-    </div>
+    </>
   )
 }
-
 
 export async function getStaticProps() {
   const { data } = await client.query({
@@ -60,6 +67,7 @@ export async function getStaticProps() {
           content
           author
           category {
+            id
             name
             description
           }
