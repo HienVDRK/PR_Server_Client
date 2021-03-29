@@ -17,8 +17,11 @@ const resolvers = {
                 where: {
                     categoryId: categoryId
                 }
-              })
-        }
+            })
+        },
+        async allImage (root, args, { models }) {
+            return models.Image.findAll()
+        },
     },
     Mutation: {
         async createCategory (root, { name, description }, { models }) {
@@ -29,7 +32,12 @@ const resolvers = {
         },
         async createArticle (root, { categoryId, title, summary, content, author }, { models }) {
             return models.Article.create({ categoryId, title, summary, content, author })
-        }
+        },
+        async uploadImage (root, args, { models }){
+            return args.image.then(image => {
+                return models.Image.create(image)
+            });
+        },
     },
     Category: {
         async articles (category) {

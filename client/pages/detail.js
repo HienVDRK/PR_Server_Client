@@ -38,9 +38,9 @@ export default function Detail() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <span onClick={() => router.back()}>Back</span>
-      <h2>
+      <h1 className={styles.title}>
           Detail Article
-      </h2>
+      </h1>
       <Typography>
         <Title>{restaurantData && restaurantData.title}</Title>
         <Paragraph>

@@ -17,12 +17,19 @@ const typeDefs = gql`
         category: Category!
     }
 
+    type Image {
+        filename: String!
+        mimetype: String!
+        encoding: String!
+    }
+
     type Query {
         allCategory: [Category!]!
         categoryById(id: Int!): Category
         allArticle: [Article!]!
         articleById(id: Int!): Article
         articlesByCategoryId(categoryId: Int!): [Article!]!
+        allImage: [Image]
     }
 
     type Mutation {
@@ -34,6 +41,7 @@ const typeDefs = gql`
           content: String!
           author: String!
         ): Article!
+        uploadImage(image: Upload!): Image!
     }
 `
 

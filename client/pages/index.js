@@ -8,13 +8,13 @@ import 'antd/dist/antd.css';
 import { Typography, Divider } from 'antd';
 const { Title, Paragraph, Text } = Typography;
 import _ from 'lodash';
+
 export default function Home(props) {
  const router = useRouter()
  let grouped =_.chain(props.allArticle)
       .groupBy("category.name")
       .map((value, key) => ({ nameCate: key, listArctile: value }))
       .value();
-  
   return (
     <>
         <Head>
@@ -27,18 +27,18 @@ export default function Home(props) {
 
         <div className={styles.grid}>
             {grouped.map((value, index1) => (
-              <div key={index1}>
+              <>
               <h2 style={{paddingLeft: "20px"}}>{value.nameCate}</h2>
                 {value.listArctile.map((value, index2) => (
                   <Link href={{ pathname: `/detail`, query: { id: value.id } }}>
-                    <div key={index2} className={styles.card}>
+                    <div className={styles.card}>
                       <h4>{value.title}</h4>
                       <h4>{value.summary}</h4>
                       <h5>{value.author}</h5>
                     </div>
                   </Link>
                 ))}
-              </div>
+              </>
             ))}
         </div>
 
